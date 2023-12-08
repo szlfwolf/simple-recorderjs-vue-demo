@@ -10,7 +10,6 @@ TBC
 
 [replicate api](!https://replicate.com/cjwbw/seamless_communication/api?tab=nodejs)
 
-TBC
 0. install deps
 
     ```bash
