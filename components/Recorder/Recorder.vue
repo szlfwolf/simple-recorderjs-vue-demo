@@ -1,0 +1,55 @@
+<script setup>
+import { onMounted,ref } from 'vue';
+import axios from 'axios';
+import { startRecording,pauseRecording,stopRecording } from './app.js'
+
+const info = ref(0)
+const translang = ref("eng")
+const selectedOption = ref({}) ;
+const options =ref([]);
+
+function stopRecordingWithTrans(){
+    console.log(selectedOption.value.name);
+    stopRecording(selectedOption.value.name);
+    // setTimeout(()=>{
+    //     var lastElementChild = document.getElementById("recordingsList").lastElementChild;
+    //     lastElementChild.insertAdjacentText("afterbegin",selectedOption.value.name);
+    //     // lastElementChild.insertAdjacentText("beforeend",selectedOption.value.name);
+    // },100);
+    
+}
+
+onMounted(()=>{
+    info.value="demo"
+
+    const data = {lang:translang.value};
+    axios
+      .post('http://localhost:8804/langOptions', data)
+      .then((response) => {
+            options.value = response.data;
+            selectedOption.value = options.value[0];
+        })
+      .catch(function (error) { // 请求失败处理
+        console.log(error);
+        info.value="error"
+      });      
+})
+
+
+</script>
+<template>
+        <h1>Simple Recorder.js {{ info }}</h1>
+        <div id="controls">
+        <button id="recordButton"  @click="startRecording">Record</button>
+        <button id="pauseButton"  @click="pauseRecording" disabled>Pause</button>
+        <button id="stopButton"   @click="stopRecordingWithTrans"  disabled>Stop</button>
+        <select v-model="selectedOption">
+            <option v-for="option in options" :value="option">{{option.name}}</option>
+        </select>
+        </div>
+        <div id="formats">Format: start recording to see sample rate</div>
+        <p><strong>Recordings:</strong></p>
+        <ol id="recordingsList" ref="recordings"></ol>
+    
+</template>
+
