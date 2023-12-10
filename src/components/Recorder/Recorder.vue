@@ -3,6 +3,7 @@ import { onMounted,ref } from 'vue';
 import axios from 'axios';
 import { startRecording,pauseRecording,stopRecording } from './app.js'
 
+
 const info = ref(0)
 const translang = ref("eng")
 const selectedOption = ref({}) ;
@@ -18,7 +19,7 @@ onMounted(() => {
 
   const data = { lang: translang.value };
   axios
-    .post( 'https://simple-recorder-api.azurewebsites.net/api/langoptions', data)
+    .post( import.meta.env.VITE_APP_BASE_API +'/langoptions', data)
     .then((response) => {
       console.log(response.data)
       options.value = response.data;

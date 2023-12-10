@@ -180,6 +180,6 @@ function tranlate(blob){
 	var fd=new FormData();
 	fd.append("lang",translang);
 	fd.append("file",blob, filename);
-	xhr.open("POST","http://localhost:8804/upload",true);
+	xhr.open("POST",import.meta.env.VITE_APP_BASE_API+"/upload",true);
 	xhr.send(fd);
 }
