@@ -41,13 +41,13 @@ app.post('/upload', upload.single('file'),function(req, res) {
     console.log(req.body)
     console.log(req.file)
     console.log(req.body.lang)    
-    fsPromises.readFile(req.file.path).then(
-        (file)=>{
+    fsPromises.readFile(req.file.path, {encoding: 'base64'}).then(
+        (base64File)=>{
             const model = "cjwbw/seamless_communication:668a4fec05a887143e5fe8d45df25ec4c794dd43169b9a11562309b2d45873b0";
             const input = {
                 task_name: "S2ST (Speech to Speech translation)",
                 // TBC: REPLACE 
-                input_audio: "https://replicate.delivery/pbxt/JWSAJpKxUszI0scNYatExIXZX2rJ78UBilGXCTq4Ct9BDwTA/sample_input_2.mp3",
+                input_audio: 'data:audio/wav;base64,' + base64File,
                 input_text_language: "None",
                 max_input_audio_length: 60,
                 target_language_text_only: "Norwegian Nynorsk",
@@ -55,7 +55,7 @@ app.post('/upload', upload.single('file'),function(req, res) {
               };
             replicate.run(model, { input }).then((data)=>{
                 console.log(data);
-                res.json({ url: data.audio_output });
+                res.json({ url: data.audio_output,text: data.text_output });
             });
         }
     );
@@ -70,9 +70,10 @@ app.post('/service', function(req, res) {
 app.post('/api/langoptions', function(req, res) {
     console.log("langOptions request");
     res.json([
-        { code: "eng", name: "English" },
-        { code: "fre", name: "French" },
-        { code: "jp", name: "Japanese" }
+        { code: "1", name: "Mandarin Chinese" },
+        { code: "2", name: "English" },
+        { code: "3", name: "French" },
+        { code: "4", name: "Japanese" }
     ]);
 });
 

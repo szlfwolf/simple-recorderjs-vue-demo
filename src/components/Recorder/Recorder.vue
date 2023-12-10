@@ -19,7 +19,7 @@ onMounted(()=>{
     const data = {lang:translang.value};
     axios
       .post( 'https://simple-recorder-api.azurewebsites.net/api/langoptions', data)
-      .then((response) => {
+            .then((response) => {
             options.value = response.data;
             selectedOption.value = options.value[0];
         })

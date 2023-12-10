@@ -160,11 +160,13 @@ function createDownloadLink(blob) {
 		  xhr.onload=function(e) {
 			console.log(e)
 			if(this.readyState === 4) {
-				console.log("Server returned: ",e.target);
+				console.log("Server returned: ",e.target.response);
+				var data = JSON.parse(e.target.response);
 				var transau = document.createElement('audio');
-				transau.src = JSON.parse(e.target.response).url;
+				transau.src = data.url;
 				transau.controls = true;
 				li.appendChild(transau);
+				li.appendChild(document.createTextNode(data.text));
 			}
 		  };
 		  var fd=new FormData();
