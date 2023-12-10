@@ -150,34 +150,36 @@ function createDownloadLink(blob) {
 
 	//add the save to disk link to li
 	li.appendChild(link);
-	
-	//upload link
-	var upload = document.createElement('a');
-	upload.href="#";
-	upload.innerHTML = translang;
-	upload.addEventListener("click", function(event){
-		  var xhr=new XMLHttpRequest();
-		  xhr.onload=function(e) {
-			console.log(e)
-			if(this.readyState === 4) {
-				console.log("Server returned: ",e.target.response);
-				var data = JSON.parse(e.target.response);
-				var transau = document.createElement('audio');
-				transau.src = data.url;
-				transau.controls = true;
-				li.appendChild(transau);
-				li.appendChild(document.createTextNode(data.text));
-			}
-		  };
-		  var fd=new FormData();
-		  fd.append("lang",translang);
-		  fd.append("file",blob, filename);
-		  xhr.open("POST","http://localhost:8804/upload",true);
-		  xhr.send(fd);
-	})
-	li.appendChild(document.createTextNode (" "))//add a space in between
-	li.appendChild(upload)//add the upload link to li
 
 	//add the li element to the ol
 	recordingsList.appendChild(li);
+
+	tranlate(blob);
+}
+
+
+function tranlate(blob){
+	var filename = new Date().toISOString();
+
+	var xhr=new XMLHttpRequest();
+	xhr.onload=function(e) {
+	  console.log(e)
+	  if(this.readyState === 4) {
+		  console.log("Server returned: ",e.target.response);
+		  var li = document.createElement('li');
+		  li.style.border="3px solid green";
+		  var data = JSON.parse(e.target.response);
+		  var transau = document.createElement('audio');
+		  transau.src = data.url;
+		  transau.controls = true;
+		  li.appendChild(transau);
+		  li.appendChild(document.createTextNode(data.text));
+		  recordingsList.appendChild(li);
+	  }
+	};
+	var fd=new FormData();
+	fd.append("lang",translang);
+	fd.append("file",blob, filename);
+	xhr.open("POST","http://localhost:8804/upload",true);
+	xhr.send(fd);
 }

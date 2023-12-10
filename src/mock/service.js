@@ -21,44 +21,31 @@ if (!process.env.hasOwnProperty('REPLICATE_API_TOKEN')) {
   throw new Error('REPLICATE_API_TOKEN is not set');
 }
 
-// 
+const replicate = new Replicate({ auth: replicateToken }); 
 
+var storage = multer.memoryStorage()
+var upload = multer({ storage: storage,limits: { fileSize: 1024*1024 }})
 
-// https://juejin.cn/post/7214146630466388026
-// const storage = multer.diskStorage({
-//     destination(req, file, cb) {
-//       cb(null, './uploads')
-//     },
-//     filename(req, file, cb) {
-//       cb(null, Date.now() + '-' + file.originalname)
-//     }
-//   })
-// const upload = multer({ dest: storage })
-const upload = multer({ dest: './uploads' })
+app.post('/upload', upload.single('file'),function(req, res) {  
+    const fileSize = parseInt(req.headers["content-length"])
+    console.log("file size:"+fileSize)  
+    const body = req.file; 
+    const base64Data = body.buffer.toString("base64");
 
-app.post('/upload', upload.single('file'),function(req, res) {
-    const replicate = new Replicate({ auth: replicateToken });
-    console.log(req.body)
-    console.log(req.file)
-    console.log(req.body.lang)    
-    fsPromises.readFile(req.file.path, {encoding: 'base64'}).then(
-        (base64File)=>{
-            const model = "cjwbw/seamless_communication:668a4fec05a887143e5fe8d45df25ec4c794dd43169b9a11562309b2d45873b0";
-            const input = {
-                task_name: "S2ST (Speech to Speech translation)",
-                // TBC: REPLACE 
-                input_audio: 'data:audio/wav;base64,' + base64File,
-                input_text_language: "None",
-                max_input_audio_length: 60,
-                target_language_text_only: "Norwegian Nynorsk",
-                target_language_with_speech: req.body.lang
-              };
-            replicate.run(model, { input }).then((data)=>{
-                console.log(data);
-                res.json({ url: data.audio_output,text: data.text_output });
-            });
-        }
-    );
+    const model = "cjwbw/seamless_communication:668a4fec05a887143e5fe8d45df25ec4c794dd43169b9a11562309b2d45873b0";
+    const input = {
+        task_name: "S2ST (Speech to Speech translation)",
+        // TBC: REPLACE 
+        input_audio: 'data:audio/wav;base64,' + base64Data,
+        input_text_language: "None",
+        max_input_audio_length: 60,
+        target_language_text_only: req.body.lang,
+        target_language_with_speech: req.body.lang
+      };
+    replicate.run(model, { input }).then((data)=>{
+        console.log(data);
+        res.json({ url: data.audio_output,text: data.text_output });
+    });
 
 });
 

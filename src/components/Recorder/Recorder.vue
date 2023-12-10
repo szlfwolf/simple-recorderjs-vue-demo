@@ -13,20 +13,21 @@ function stopRecordingWithTrans(){
   stopRecording(selectedOption.value.name);
 }
 
-onMounted(()=>{
-    info.value="demo"
-    
-    const data = {lang:translang.value};
-    axios
-      .post( 'https://simple-recorder-api.azurewebsites.net/api/langoptions', data)
-            .then((response) => {
-            options.value = response.data;
-            selectedOption.value = options.value[0];
-        })
-      .catch(function (error) { // 请求失败处理
-        console.log(error);
-        info.value="error"
-      });      
+onMounted(() => {
+  info.value = "demo"
+
+  const data = { lang: translang.value };
+  axios
+    .post( 'https://simple-recorder-api.azurewebsites.net/api/langoptions', data)
+    .then((response) => {
+      console.log(response.data)
+      options.value = response.data;
+      selectedOption.value = options.value[0];
+    })
+    .catch(function (error) { // 请求失败处理
+      console.log(error);
+      info.value = "error"
+    });
 })
 
 
