@@ -1,3 +1,5 @@
+import * as RecorderJs from './recorder.js'
+
 //webkitURL is deprecated but nevertheless
 URL = window.URL || window.webkitURL;
 
