@@ -17,7 +17,7 @@
 
 <script setup lang="ts">
 import { onMounted,ref } from 'vue';
-// import axios from 'axios';
+import axios from 'axios';
 import { startRecording,pauseRecording,stopRecording } from './app.js'
 
 
@@ -34,16 +34,16 @@ stopRecording(selectedOption.value.name);
 onMounted(() => {
 info.value = "demo"
 const data = { lang: translang.value };
-// axios
-//   .post( import.meta.env.VITE_APP_BASE_API +'/langoptions', data)
-//   .then((response) => {
-//     console.log(response.data)
-//     options.value = response.data;
-//     selectedOption.value = options.value[0];
-//   })
-//   .catch(function (error) { // 请求失败处理
-//     console.log(error);
-//     info.value = "error"
-//   });
+axios
+  .post( import.meta.env.VITE_APP_BASE_API +'/langoptions', data)
+  .then((response) => {
+    console.log(response.data)
+    options.value = response.data;
+    selectedOption.value = options.value[0];
+  })
+  .catch(function (error) { // 请求失败处理
+    console.log(error);
+    info.value = "error"
+  });
 })
 </script>

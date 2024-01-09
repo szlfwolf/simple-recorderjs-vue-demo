@@ -26,7 +26,7 @@ const replicate = new Replicate({ auth: replicateToken });
 var storage = multer.memoryStorage()
 var upload = multer({ storage: storage,limits: { fileSize: 1024*1024 }})
 
-app.post('/upload', upload.single('file'),function(req, res) {  
+app.post('/api/upload', upload.single('file'),function(req, res) {  
     const fileSize = parseInt(req.headers["content-length"])
     console.log("file size:"+fileSize)  
     const body = req.file; 
@@ -49,7 +49,7 @@ app.post('/upload', upload.single('file'),function(req, res) {
 
 });
 
-app.post('/service', function(req, res) {
+app.post('/api/service', function(req, res) {
     console.log(req.body);
     res.json({ name: "hello from mock server:" + req.body.lang });
 });
